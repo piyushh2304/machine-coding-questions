@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Socket Test</title>
+    <!-- Import Socket.io Client Script -->
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+</head>
+
+<body>
+    <h1>WebSocket Test</h1>
+    <input type="text" id="msgInput" placeholder="Type a message...">
+    <button onclick="sendMessage()">Send</button>
+    <ul id="messages"></ul>
+    <script>
+        // Connect to backend
+        const socket = io('http://localhost:5000');
+        socket.on('connect', () => {
+            console.log('Connected to server with ID:', socket.id);
+            addMessage('System: Connected!');
+        });
+        // Listen for incoming messages
+        socket.on('message', (data) => {
+            addMessage(`${data.sender}: ${data.text}`);
+        });
+        function sendMessage() {
+            const input = document.getElementById('msgInput');
+            const text = input.value;
+            // Emit event to server
+            socket.emit('sendMessage', text);
+            input.value = '';
+        }
+        function addMessage(text) {
+            const li = document.createElement('li');
+            li.textContent = text;
+            document.getElementById('messages').appendChild(li);
+        }
+    </script>
+</body>
+
+</html>
