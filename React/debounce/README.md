@@ -1,16 +1,78 @@
-# React + Vite
+# 🔍 React + JavaScript Debounced API Search Component
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A beginner-friendly React project built to understand **debouncing, React state, effects, async API handling, lists, and cleanup logic** by writing real logic instead of memorizing syntax.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🧠 Learning Goal
 
-## React Compiler
+- Build strong logic before code  
+- Understand **why debounce works**, not just how to write it  
+- Learn **React state-driven UI updates**  
+- Handle async API calls **safely with proper cleanup**
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## ⚙ Features Implemented
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- Controlled search input component
+- Debounced API call (waits for user to stop typing)
+- Cancels previous timer if typing continues
+- Loading state during API request
+- Dynamic list rendering using `.map()` with keys
+- Defensive error handling (prevents crashes)
+- Clears timer using `useEffect cleanup`
+
+---
+
+## 🧩 Concepts Covered
+
+| Concept | Usage in Project |
+|--------|----------------|
+| React State (`useState`) | Stores query, results, loading status |
+| Controlled Component | Search input updates state on change |
+| Debouncing | API triggers only after typing stops |
+| `setTimeout` + `clearTimeout` | Timer reset logic |
+| `useEffect` dependency array | Re-runs debounce on query update |
+| Promise handling (`then/catch/finally`) | Safe async UI updates |
+| List Rendering | Displays results dynamically |
+| Cleanup Function | Prevents memory leaks and stale timers |
+
+---
+
+## 🚀 How It Works (Logic Summary)
+
+1. User types into search box
+2. Timer starts (debounce delay)
+3. If user types again before delay → old timer is canceled
+4. If delay completes without typing → API is called
+5. UI shows loading while API responds
+6. Results are displayed using list rendering
+7. Errors are handled safely, UI doesn't crash
+
+---
+
+## 🧪 Edge Cases Handled
+
+- Empty query avoids unnecessary API calls
+- First search initializes timer correctly
+- API failures don't break the app
+- Fast typing continuously resets timer safely
+- Cleanup ensures no memory leaks
+
+---
+
+## 📌 Code Quality Focus
+
+- No shortcuts, full logic clarity
+- No syntax memorization
+- Defensive programming like real production apps
+- Modular and readable structure
+
+---
+
+## 🛠 Installation & Run
+
+```sh
+npm install
+npm start
