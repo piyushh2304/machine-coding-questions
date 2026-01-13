@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useState, useEffect, type ReactNode } from 'react';
 import api from '../api/axios';
 import { User, AuthContextType, AuthResponse } from '../types';
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
