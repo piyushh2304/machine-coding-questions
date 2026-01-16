@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/auth-context';
 import * as taskService from '../services/taskService';
 import { useDebounce } from '../hooks/useDebounce';
+import { useToast } from '../context/toast-context';
 import {
     Plus, Search, Trash2, Edit2,
     LogOut, CheckCircle2, Clock, X,
@@ -10,6 +11,8 @@ import {
     ChevronLeft, ChevronRight
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 const TaskModal = ({ isOpen, onClose, onSubmit, task = null }) => {
     if (!isOpen) return null;
@@ -25,79 +28,85 @@ const TaskModal = ({ isOpen, onClose, onSubmit, task = null }) => {
                 initial={{ scale: 0.9, y: 20 }}
                 animate={{ scale: 1, y: 0 }}
                 exit={{ scale: 0.9, y: 20 }}
-                className="bg-[#121214] border border-white/5 w-full max-w-lg rounded-[3rem] p-10 shadow-2xl"
+                className="bg-card border border-border w-full max-w-lg rounded-[2rem] p-8 shadow-2xl overflow-hidden relative"
             >
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-violet-500 via-fuchsia-500 to-violet-500 opacity-50" />
                 <div className="flex justify-between items-center mb-8">
-                    <h2 className="text-3xl font-black tracking-tight">{task ? 'Edit Task' : 'New Task'}</h2>
-                    <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-full transition-colors text-zinc-500 hover:text-white">
-                        <X size={24} />
-                    </button>
+                    <h2 className="text-2xl font-bold tracking-tight text-foreground">{task ? 'Edit Task' : 'New Task'}</h2>
+                    <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full hover:bg-muted text-muted-foreground hover:text-foreground">
+                        <X size={20} />
+                    </Button>
                 </div>
 
                 <form onSubmit={onSubmit} className="space-y-6">
                     <div className="space-y-2">
-                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1">Title</label>
-                        <input
+                        <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground ml-1">Title</label>
+                        <Input
                             name="title"
                             defaultValue={task?.title || ''}
                             required
                             placeholder="e.g., Finalize project roadmap"
-                            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500/50 transition-all font-semibold"
+                            className="bg-muted/50 border-input/50 focus:bg-background transition-all h-12 text-base"
                         />
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1">Description</label>
+                        <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground ml-1">Description</label>
                         <textarea
                             name="description"
                             defaultValue={task?.description || ''}
                             placeholder="Add core details..."
                             rows="3"
-                            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500/50 transition-all font-medium resize-none"
+                            className="flex min-h-[80px] w-full rounded-md border border-input/50 bg-muted/50 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus:bg-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all resize-none"
                         />
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1">Priority</label>
-                            <select
-                                name="priority"
-                                defaultValue={task?.priority || 'medium'}
-                                className="w-full bg-[#1c1c1f] border border-white/10 rounded-2xl py-4 px-6 focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500/50 transition-all font-bold appearance-none cursor-pointer"
-                            >
-                                <option value="low">Low</option>
-                                <option value="medium">Medium</option>
-                                <option value="high">High</option>
-                            </select>
+                            <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground ml-1">Priority</label>
+                            <div className="relative">
+                                <select
+                                    name="priority"
+                                    defaultValue={task?.priority || 'medium'}
+                                    className="flex h-12 w-full items-center justify-between rounded-md border border-input/50 bg-muted/50 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 appearance-none cursor-pointer"
+                                >
+                                    <option value="low">Low</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="high">High</option>
+                                </select>
+                            </div>
                         </div>
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1">Status</label>
-                            <select
-                                name="status"
-                                defaultValue={task?.status || 'todo'}
-                                className="w-full bg-[#1c1c1f] border border-white/10 rounded-2xl py-4 px-6 focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500/50 transition-all font-bold appearance-none cursor-pointer"
-                            >
-                                <option value="todo">To Do</option>
-                                <option value="in-progress">In Progress</option>
-                                <option value="done">Done</option>
-                            </select>
+                            <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground ml-1">Status</label>
+                            <div className="relative">
+                                <select
+                                    name="status"
+                                    defaultValue={task?.status || 'todo'}
+                                    className="flex h-12 w-full items-center justify-between rounded-md border border-input/50 bg-muted/50 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 appearance-none cursor-pointer"
+                                >
+                                    <option value="todo">To Do</option>
+                                    <option value="in-progress">In Progress</option>
+                                    <option value="done">Done</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
 
-                    <div className="pt-6 flex gap-4">
-                        <button
+                    <div className="pt-4 flex gap-4">
+                        <Button
                             type="button"
+                            variant="outline"
                             onClick={onClose}
-                            className="flex-1 py-4 rounded-2xl border border-white/10 font-bold hover:bg-white/5 transition-all text-zinc-400 hover:text-white"
+                            className="flex-1 h-12 rounded-xl border-dashed"
                         >
                             Cancel
-                        </button>
-                        <button
+                        </Button>
+                        <Button
                             type="submit"
-                            className="flex-1 py-4 bg-violet-600 text-white rounded-2xl font-bold shadow-xl shadow-violet-600/20 hover:bg-violet-500 transition-all active:scale-95"
+                            className="flex-1 h-12 rounded-xl bg-violet-600 hover:bg-violet-700 text-white shadow-lg shadow-violet-600/20"
                         >
                             {task ? 'Save Changes' : 'Create Task'}
-                        </button>
+                        </Button>
                     </div>
                 </form>
             </motion.div>
@@ -108,6 +117,7 @@ const TaskModal = ({ isOpen, onClose, onSubmit, task = null }) => {
 const Dashboard = () => {
     const { user, logout, loading } = useContext(AuthContext);
     const navigate = useNavigate();
+    const { toast } = useToast();
 
     // States
     const [tasks, setTasks] = useState([]);
@@ -132,6 +142,11 @@ const Dashboard = () => {
             setPages(response.data.pages || 1);
         } catch (error) {
             console.error('Failed to fetch tasks', error);
+            toast({
+                title: "Error",
+                description: "Failed to sync tasks. Please try again.",
+                variant: "destructive"
+            });
         } finally {
             setIsRefreshing(false);
         }
@@ -149,6 +164,10 @@ const Dashboard = () => {
 
     const handleLogout = () => {
         logout();
+        toast({
+            title: "Logged out",
+            description: "You have been successfully logged out.",
+        });
         navigate('/login');
     };
 
@@ -160,24 +179,45 @@ const Dashboard = () => {
         try {
             if (editingTask) {
                 await taskService.updateTask(editingTask._id, taskData);
+                toast({
+                    title: "Task Updated",
+                    description: "Your task has been updated successfully.",
+                });
             } else {
                 await taskService.createTask(taskData);
+                toast({
+                    title: "Task Created",
+                    description: "Your new task has been added.",
+                });
             }
             setIsModalOpen(false);
             setEditingTask(null);
             fetchTasks();
         } catch (error) {
-            alert('Operation failed! Please try again.');
+            toast({
+                title: "Error",
+                description: "Operation failed! Please try again.",
+                variant: "destructive"
+            });
         }
     };
 
     const handleDelete = async (id) => {
-        if (window.confirm('Delete this task forever?')) {
+        if (window.confirm('Delete this task forever?')) { // Could replace this with a custom dialog later
             try {
                 await taskService.deleteTask(id);
+                toast({
+                    title: "Task Deleted",
+                    description: "The task has been permanently removed.",
+                    variant: "default"
+                });
                 fetchTasks();
             } catch (error) {
-                alert('Delete failed');
+                toast({
+                    title: "Error",
+                    description: "Could not delete task.",
+                    variant: "destructive"
+                });
             }
         }
     };
@@ -186,16 +226,25 @@ const Dashboard = () => {
         const newStatus = task.status === 'done' ? 'todo' : 'done';
         try {
             await taskService.updateTask(task._id, { ...task, status: newStatus });
+            const action = newStatus === 'done' ? 'completed' : 'reopened';
+            toast({
+                title: `Task ${action}`,
+                description: `Marked "${task.title}" as ${newStatus === 'done' ? 'done' : 'to do'}.`,
+            });
             fetchTasks();
         } catch (error) {
-            console.log('Status update failed');
+            toast({
+                title: "Error",
+                description: "Failed to update status.",
+                variant: "destructive"
+            });
         }
     };
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-[#09090b] flex items-center justify-center">
-                <Loader2 className="animate-spin text-violet-500" size={40} />
+            <div className="min-h-screen bg-background flex items-center justify-center">
+                <Loader2 className="animate-spin text-primary" size={40} />
             </div>
         );
     }
@@ -203,73 +252,88 @@ const Dashboard = () => {
     if (!user) return null;
 
     return (
-        <div className="min-h-screen bg-[#0b0b0d] text-zinc-100 font-inter">
-            <nav className="border-b border-white/5 bg-black/20 backdrop-blur-xl sticky top-0 z-50">
-                <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between gap-4">
+        <div className="min-h-screen bg-background text-foreground font-geist selection:bg-violet-500/30">
+            <nav className="border-b border-border/50 bg-background/50 backdrop-blur-xl sticky top-0 z-50">
+                <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-violet-600 rounded-2xl flex items-center justify-center shadow-lg shadow-violet-600/20">
-                            <CheckCircle2 className="text-white" size={24} />
+                        <div className="w-8 h-8 bg-violet-600 rounded-xl flex items-center justify-center shadow-lg shadow-violet-600/20">
+                            <CheckCircle2 className="text-white" size={18} />
                         </div>
-                        <span className="text-xl font-bold tracking-tighter uppercase whitespace-nowrap">Nexus<span className="text-violet-500">Flow</span></span>
+                        <span className="text-lg font-bold tracking-tight">Nexus<span className="text-violet-500">Flow</span></span>
                     </div>
 
-                    <div className="flex-1 max-w-xl relative group">
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 transition-colors group-focus-within:text-violet-500" size={18} />
-                        <input
+                    <div className="flex-1 max-w-md relative group hidden md:block">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors group-focus-within:text-violet-500" size={16} />
+                        <Input
                             type="text"
                             placeholder="Search tasks..."
-                            className="bg-white/5 border border-white/10 rounded-2xl py-2.5 pl-12 pr-4 w-full focus:outline-none focus:border-violet-500/50 transition-all text-sm font-medium"
+                            className="bg-muted/50 border-input/20 pl-10 pr-4 h-10 rounded-xl focus:bg-background transition-all"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
 
-                    <div className="flex items-center gap-4">
-                        <button onClick={handleLogout} className="p-2.5 rounded-2xl hover:bg-rose-500/10 text-zinc-400 hover:text-rose-500 transition-all border border-transparent hover:border-rose-500/20">
-                            <LogOut size={20} />
-                        </button>
+                    <div className="flex items-center gap-2">
+                        <div className="md:hidden">
+                            <Button variant="ghost" size="icon" onClick={() => { /* Toggle mobile search */ }}>
+                                <Search size={20} />
+                            </Button>
+                        </div>
+                        <span className="hidden sm:inline text-sm font-medium text-muted-foreground mr-2">
+                            Hi, {user.name.split(' ')[0]}
+                        </span>
+                        <Button variant="ghost" size="icon" onClick={handleLogout} className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-xl">
+                            <LogOut size={18} />
+                        </Button>
                     </div>
                 </div>
             </nav>
 
-            <main className="max-w-7xl mx-auto px-6 py-12">
-                <div className="flex flex-wrap items-center justify-between gap-6 mb-12">
-                    <div className="flex flex-wrap items-center gap-4">
-                        <div className="flex items-center gap-2 bg-white/5 px-4 py-2 rounded-2xl border border-white/10 hover:border-white/20 transition-all">
-                            <Filter size={16} className="text-zinc-500" />
+            <main className="max-w-7xl mx-auto px-6 py-8">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+                    <div className="flex flex-col gap-1">
+                        <h1 className="text-3xl font-bold tracking-tight">My Tasks</h1>
+                        <p className="text-muted-foreground text-sm">Manage your projects and deadlines efficiently.</p>
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-3">
+                        {/* Filter Controls */}
+                        <div className="flex items-center gap-2 bg-muted/30 px-3 py-1.5 rounded-xl border border-border/50">
+                            <Filter size={14} className="text-muted-foreground" />
                             <select
                                 value={statusFilter}
                                 onChange={(e) => setStatusFilter(e.target.value)}
-                                className="bg-transparent text-sm font-bold focus:outline-none cursor-pointer appearance-none pr-2"
+                                className="bg-transparent text-sm font-medium focus:outline-none cursor-pointer appearance-none pr-4 text-foreground"
                             >
-                                <option value="all" className="bg-[#121214]">All Status</option>
-                                <option value="todo" className="bg-[#121214]">To Do</option>
-                                <option value="in-progress" className="bg-[#121214]">In Progress</option>
-                                <option value="done" className="bg-[#121214]">Done</option>
+                                <option value="all" className="bg-popover text-popover-foreground">All Status</option>
+                                <option value="todo" className="bg-popover text-popover-foreground">To Do</option>
+                                <option value="in-progress" className="bg-popover text-popover-foreground">In Progress</option>
+                                <option value="done" className="bg-popover text-popover-foreground">Done</option>
                             </select>
                         </div>
 
-                        <div className="flex items-center gap-2 bg-white/5 px-4 py-2 rounded-2xl border border-white/10 hover:border-white/20 transition-all">
-                            <Filter size={16} className="text-zinc-500" />
+                        <div className="flex items-center gap-2 bg-muted/30 px-3 py-1.5 rounded-xl border border-border/50">
+                            <Filter size={14} className="text-muted-foreground" />
                             <select
                                 value={priorityFilter}
                                 onChange={(e) => setPriorityFilter(e.target.value)}
-                                className="bg-transparent text-sm font-bold focus:outline-none cursor-pointer appearance-none pr-2"
+                                className="bg-transparent text-sm font-medium focus:outline-none cursor-pointer appearance-none pr-4 text-foreground"
                             >
-                                <option value="all" className="bg-[#121214]">All Priority</option>
-                                <option value="high" className="bg-[#121214]">High</option>
-                                <option value="medium" className="bg-[#121214]">Medium</option>
-                                <option value="low" className="bg-[#121214]">Low</option>
+                                <option value="all" className="bg-popover text-popover-foreground">All Priority</option>
+                                <option value="high" className="bg-popover text-popover-foreground">High</option>
+                                <option value="medium" className="bg-popover text-popover-foreground">Medium</option>
+                                <option value="low" className="bg-popover text-popover-foreground">Low</option>
                             </select>
                         </div>
-                    </div>
 
-                    <button
-                        onClick={() => { setEditingTask(null); setIsModalOpen(true); }}
-                        className="bg-violet-600 hover:bg-violet-500 text-white font-bold py-3.5 px-6 rounded-2xl shadow-xl shadow-violet-600/20 transition-all active:scale-95 flex items-center gap-3"
-                    >
-                        <Plus size={20} /> New Task
-                    </button>
+
+                        <Button
+                            onClick={() => { setEditingTask(null); setIsModalOpen(true); }}
+                            className="rounded-xl px-5 h-10 bg-foreground text-background hover:bg-foreground/90 font-semibold shadow-lg shadow-white/5"
+                        >
+                            <Plus size={18} className="mr-2" /> New Task
+                        </Button>
+                    </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -280,38 +344,44 @@ const Dashboard = () => {
                                 layout
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, scale: 0.9 }}
-                                className={`group border rounded-[2.5rem] p-8 transition-all duration-300 ${task.status === 'done'
-                                        ? 'bg-zinc-900/20 border-white/5 opacity-60'
-                                        : 'bg-[#161618] border-white/5 hover:border-violet-500/30 shadow-lg hover:shadow-violet-600/5'
+                                exit={{ opacity: 0, scale: 0.95 }}
+                                className={`group relative rounded-[1.5rem] p-6 transition-all duration-300 border ${task.status === 'done'
+                                    ? 'bg-muted/10 border-border/40 opacity-75'
+                                    : 'bg-card border-border/50 hover:border-violet-500/30 hover:shadow-xl hover:shadow-violet-500/5'
                                     }`}
                             >
-                                <div className="flex justify-between items-start mb-6">
-                                    <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${task.priority === 'high' ? 'bg-rose-500/10 text-rose-500' :
-                                            task.priority === 'medium' ? 'bg-amber-500/10 text-amber-500' : 'bg-emerald-500/10 text-emerald-500'
+                                <div className="flex justify-between items-start mb-4">
+                                    <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border ${task.priority === 'high' ? 'bg-rose-500/10 text-rose-500 border-rose-500/20' :
+                                        task.priority === 'medium' ? 'bg-amber-500/10 text-amber-500 border-amber-500/20' : 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'
                                         }`}>
                                         {task.status === 'done' ? 'Completed' : task.priority}
                                     </span>
                                     <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                                        <button onClick={() => { setEditingTask(task); setIsModalOpen(true); }} className="p-2.5 hover:bg-white/5 rounded-xl text-zinc-500 hover:text-white transition-all"><Edit2 size={16} /></button>
-                                        <button onClick={() => handleDelete(task._id)} className="p-2.5 hover:bg-rose-500/10 rounded-xl text-zinc-500 hover:text-rose-500 transition-all"><Trash2 size={16} /></button>
+                                        <Button variant="ghost" size="icon" onClick={() => { setEditingTask(task); setIsModalOpen(true); }} className="h-8 w-8 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground">
+                                            <Edit2 size={14} />
+                                        </Button>
+                                        <Button variant="ghost" size="icon" onClick={() => handleDelete(task._id)} className="h-8 w-8 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive">
+                                            <Trash2 size={14} />
+                                        </Button>
                                     </div>
                                 </div>
-                                <h3 className={`text-xl font-bold mb-3 ${task.status === 'done' ? 'line-through text-zinc-600' : ''}`}>{task.title}</h3>
-                                <p className="text-zinc-500 text-sm leading-relaxed mb-6 line-clamp-2 min-h-[40px]">{task.description}</p>
-                                <div className="flex items-center justify-between pt-6 border-t border-white/5">
-                                    <div className="flex items-center gap-2 text-zinc-600">
-                                        <Clock size={14} />
-                                        <span className="text-[10px] font-black uppercase tracking-widest">{new Date(task.createdAt).toLocaleDateString()}</span>
+
+                                <h3 className={`text-lg font-bold mb-2 ${task.status === 'done' ? 'line-through text-muted-foreground' : 'text-foreground'}`}>{task.title}</h3>
+                                <p className="text-muted-foreground text-sm leading-relaxed mb-6 line-clamp-3 min-h-[3rem]">{task.description}</p>
+
+                                <div className="flex items-center justify-between pt-4 border-t border-border/40">
+                                    <div className="flex items-center gap-2 text-muted-foreground">
+                                        <Clock size={12} />
+                                        <span className="text-[10px] font-bold uppercase tracking-widest">{new Date(task.createdAt).toLocaleDateString()}</span>
                                     </div>
                                     <button
                                         onClick={() => toggleStatus(task)}
-                                        className={`w-11 h-11 rounded-2xl flex items-center justify-center transition-all ${task.status === 'done'
-                                                ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20'
-                                                : 'bg-zinc-800 text-zinc-600 hover:bg-zinc-700 hover:text-zinc-400'
+                                        className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${task.status === 'done'
+                                            ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20 scale-100'
+                                            : 'bg-muted text-muted-foreground hover:bg-violet-600 hover:text-white scale-90 hover:scale-100'
                                             }`}
                                     >
-                                        <CheckCircle2 size={22} />
+                                        <CheckCircle2 size={18} />
                                     </button>
                                 </div>
                             </motion.div>
@@ -319,45 +389,49 @@ const Dashboard = () => {
                     </AnimatePresence>
 
                     {tasks.length === 0 && !isRefreshing && (
-                        <div className="lg:col-span-3 py-24 flex flex-col items-center justify-center text-zinc-600 border-2 border-dashed border-white/5 rounded-[3.5rem]">
-                            <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mb-6">
-                                <AlertCircle size={32} className="opacity-20" />
+                        <div className="lg:col-span-3 py-24 flex flex-col items-center justify-center text-muted-foreground border-2 border-dashed border-border/50 rounded-[2rem] bg-muted/5">
+                            <div className="w-16 h-16 bg-muted/50 rounded-full flex items-center justify-center mb-4">
+                                <AlertCircle size={24} className="opacity-50" />
                             </div>
-                            <p className="font-bold text-xl text-zinc-400">Your workspace is empty</p>
-                            <p className="text-sm mt-1">Start by adding your first project milestone 🚀</p>
+                            <p className="font-semibold text-lg text-foreground">No tasks found</p>
+                            <p className="text-sm">Create a new task to get started.</p>
                         </div>
                     )}
                 </div>
 
                 {pages > 1 && (
-                    <div className="mt-16 flex items-center justify-center gap-4">
-                        <button
+                    <div className="mt-12 flex items-center justify-center gap-3">
+                        <Button
+                            variant="outline"
+                            size="icon"
                             disabled={page === 1}
                             onClick={() => setPage(p => Math.max(1, p - 1))}
-                            className="p-3 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 disabled:opacity-30 transition-all group"
+                            className="rounded-xl"
                         >
-                            <ChevronLeft size={20} className="text-zinc-500 group-hover:text-white" />
-                        </button>
+                            <ChevronLeft size={16} />
+                        </Button>
 
                         <div className="flex gap-2">
                             {Array.from({ length: pages }).map((_, i) => (
                                 <button
                                     key={i}
                                     onClick={() => setPage(i + 1)}
-                                    className={`w-11 h-11 rounded-xl font-bold transition-all ${page === i + 1 ? 'bg-violet-600 text-white shadow-lg shadow-violet-600/20' : 'bg-white/5 text-zinc-500 hover:bg-white/10'}`}
+                                    className={`w-10 h-10 rounded-xl text-sm font-bold transition-all ${page === i + 1 ? 'bg-foreground text-background' : 'bg-muted/50 text-muted-foreground hover:bg-muted'}`}
                                 >
                                     {i + 1}
                                 </button>
                             ))}
                         </div>
 
-                        <button
+                        <Button
+                            variant="outline"
+                            size="icon"
                             disabled={page === pages}
                             onClick={() => setPage(p => Math.min(pages, p + 1))}
-                            className="p-3 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 disabled:opacity-30 transition-all group"
+                            className="rounded-xl"
                         >
-                            <ChevronRight size={20} className="text-zinc-500 group-hover:text-white" />
-                        </button>
+                            <ChevronRight size={16} />
+                        </Button>
                     </div>
                 )}
             </main>

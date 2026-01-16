@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthPage } from '@/components/ui/sign-in';
 import { AuthContext } from '../context/auth-context';
+import { useToast } from '../context/toast-context';
 import api from '../services/api';
 
 const sampleTestimonials = [
@@ -22,6 +23,7 @@ const sampleTestimonials = [
 const LoginPage = () => {
     const { login } = useContext(AuthContext);
     const navigate = useNavigate();
+    const { toast } = useToast();
 
     const handleSignIn = async (event) => {
         event.preventDefault();
@@ -32,18 +34,34 @@ const LoginPage = () => {
         try {
             const { data } = await api.post('/auth/login', { email, password });
             login(data);
+            toast({
+                title: "Welcome back!",
+                description: "You have successfully signed in.",
+            });
             navigate('/dashboard');
         } catch (error) {
-            alert(error.response?.data?.message || 'Login failed');
+            toast({
+                title: "Login failed",
+                description: error.response?.data?.message || 'Invalid credentials',
+                variant: "destructive"
+            });
         }
     };
 
     const handleGoogleSignIn = () => {
-        alert("Google Sign In selected - Implementation pending");
+        toast({
+            title: "Coming Soon",
+            description: "Google Sign In is currently under development.",
+            variant: "default"
+        });
     };
 
     const handleResetPassword = () => {
-        alert("Reset Password selected");
+        toast({
+            title: "Reset Password",
+            description: "Password reset functionality has been triggered.",
+            variant: "default"
+        });
     }
 
     const handleCreateAccount = () => {
