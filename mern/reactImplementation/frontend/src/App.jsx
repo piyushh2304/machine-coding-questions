@@ -6,6 +6,7 @@ import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
 import { ToastProvider } from './context/toast-context';
 import { Toaster } from './components/ui/toaster';
+import ProfilePage from './pages/ProfilePage';
 
 
 const App = () => {
@@ -25,6 +26,11 @@ const App = () => {
                   </ProtectedRoute>
                 }
               />
+              <Route path="/profile" element={
+                <ProtectedRoute>
+                  <ProfilePage />
+                </ProtectedRoute>
+              } />
               <Route path="*" element={<Navigate to="/dashboard" />} />
 
             </Routes>

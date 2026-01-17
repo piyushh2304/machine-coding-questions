@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/auth-context';
 import * as taskService from '../services/taskService';
 import { useDebounce } from '../hooks/useDebounce';
@@ -8,11 +8,24 @@ import {
     Plus, Search, Trash2, Edit2,
     LogOut, CheckCircle2, Clock, X,
     AlertCircle, Loader2, Filter,
-    ChevronLeft, ChevronRight
+    ChevronLeft, ChevronRight, Activity
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import {
+    AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
+} from 'recharts';
+
+const performanceData = [
+    { name: 'Mon', tasks: 4 },
+    { name: 'Tue', tasks: 3 },
+    { name: 'Wed', tasks: 7 },
+    { name: 'Thu', tasks: 5 },
+    { name: 'Fri', tasks: 9 },
+    { name: 'Sat', tasks: 6 },
+    { name: 'Sun', tasks: 4 },
+];
 
 const TaskModal = ({ isOpen, onClose, onSubmit, task = null }) => {
     if (!isOpen) return null;
@@ -279,9 +292,12 @@ const Dashboard = () => {
                                 <Search size={20} />
                             </Button>
                         </div>
-                        <span className="hidden sm:inline text-sm font-medium text-muted-foreground mr-2">
-                            Hi, {user.name.split(' ')[0]}
-                        </span>
+                        <Link to="/profile" className="hidden sm:inline-flex items-center gap-2 text-sm font-medium text-muted-foreground mr-2 hover:text-violet-500 transition-colors">
+                            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-violet-500 to-fuchsia-500 flex items-center justify-center text-white text-xs font-bold">
+                                {user.name?.charAt(0) || 'U'}
+                            </div>
+                            <span className="hidden md:inline">{user.name?.split(' ')[0] || 'User'}</span>
+                        </Link>
                         <Button variant="ghost" size="icon" onClick={handleLogout} className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-xl">
                             <LogOut size={18} />
                         </Button>
@@ -333,6 +349,56 @@ const Dashboard = () => {
                         >
                             <Plus size={18} className="mr-2" /> New Task
                         </Button>
+                    </div>
+                </div>
+
+                {/* Performance Chart Section */}
+                <div className="mb-10 bg-card border border-border/50 rounded-[2rem] p-8 shadow-sm relative overflow-hidden">
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-violet-500 via-fuchsia-500 to-violet-500 opacity-20" />
+                    <h2 className="text-lg font-bold mb-6 flex items-center gap-2">
+                        <Activity className="text-violet-500" size={18} />
+                        Weekly Performance
+                    </h2>
+                    <div className="h-[250px] w-full">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <AreaChart data={performanceData}>
+                                <defs>
+                                    <linearGradient id="colorTasks" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3} />
+                                        <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0} />
+                                    </linearGradient>
+                                </defs>
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.1)" />
+                                <XAxis
+                                    dataKey="name"
+                                    axisLine={false}
+                                    tickLine={false}
+                                    tick={{ fill: '#71717a', fontSize: 12 }}
+                                    dy={10}
+                                />
+                                <YAxis
+                                    hide={true}
+                                />
+                                <Tooltip
+                                    contentStyle={{
+                                        backgroundColor: '#18181b',
+                                        border: '1px solid #27272a',
+                                        borderRadius: '12px',
+                                        boxShadow: '0 4px 12px rgba(0,0,0,0.5)'
+                                    }}
+                                    itemStyle={{ color: '#e4e4e7' }}
+                                    cursor={{ stroke: '#8b5cf6', strokeWidth: 1, strokeDasharray: '5 5' }}
+                                />
+                                <Area
+                                    type="monotone"
+                                    dataKey="tasks"
+                                    stroke="#8b5cf6"
+                                    strokeWidth={3}
+                                    fillOpacity={1}
+                                    fill="url(#colorTasks)"
+                                />
+                            </AreaChart>
+                        </ResponsiveContainer>
                     </div>
                 </div>
 
