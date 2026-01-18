@@ -50,6 +50,7 @@ export const AuthPage = ({
     onResetPassword,
     onCreateAccount,
     onSignInClick,
+    googleButton,
 }) => {
     const [showPassword, setShowPassword] = useState(false);
     const isSignUp = mode === 'signup';
@@ -161,16 +162,22 @@ export const AuthPage = ({
                             <span className="px-4 text-xs font-bold uppercase tracking-widest text-muted-foreground bg-background absolute">Or continue with</span>
                         </div>
 
-                        <motion.button
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.6 }}
-                            onClick={onGoogleSignIn}
-                            className="w-full flex items-center justify-center gap-3 border border-border rounded-2xl py-4 hover:bg-secondary transition-all active:scale-[0.98] group"
-                        >
-                            <GoogleIcon />
-                            <span className="font-semibold text-sm group-hover:text-foreground transition-colors">Continue with Google</span>
-                        </motion.button>
+                        {googleButton ? (
+                            <div className="w-full flex justify-center pt-2">
+                                {googleButton}
+                            </div>
+                        ) : (
+                            <motion.button
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.6 }}
+                                onClick={onGoogleSignIn}
+                                className="w-full flex items-center justify-center gap-3 border border-border rounded-2xl py-4 hover:bg-secondary transition-all active:scale-[0.98] group"
+                            >
+                                <GoogleIcon />
+                                <span className="font-semibold text-sm group-hover:text-foreground transition-colors">Continue with Google</span>
+                            </motion.button>
+                        )}
 
                         <motion.p
                             initial={{ opacity: 0 }}

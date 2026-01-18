@@ -32,7 +32,7 @@ This document outlines the development phases for the MERN Authentication & Dash
 - [ ] Two-Factor Authentication (2FA) Setup
 - [ ] Email Verification Flow
 
-## Phase 5: Google OAuth Integration (Upcoming)
+## Phase 5: Google OAuth Integration (In Progress)
 - [ ] Passport.js or Google Identity Services integration
 - [ ] Backend OAuth strategies
 - [ ] Frontend "Continue with Google" logic

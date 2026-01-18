@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { AuthPage } from '@/components/ui/sign-in';
 import { AuthContext } from '../context/auth-context';
 import { useToast } from '../context/toast-context';
+import { GoogleLogin } from '@react-oauth/google';
 import api from '../services/api';
 
 const sampleTestimonials = [
@@ -68,6 +69,23 @@ const LoginPage = () => {
         navigate('/register');
     }
 
+    const handleGoogleSuccess = async (credentialResponse) => {
+        try {
+            const { credential } = credentialResponse;
+            // Send the token to backend
+            const { data } = await api.post('/auth/google', { token: credential });
+            login(data);
+            navigate('/dashboard');
+        } catch (error) {
+            console.error('Google Logic Failed', error);
+            alert('Google Login Failed');
+        }
+    };
+    const handleGoogleError = () => {
+        console.log('Login Failed');
+        alert('Google Login Failed');
+    };
+
     return (
         <AuthPage
             mode="signin"
@@ -77,6 +95,16 @@ const LoginPage = () => {
             onGoogleSignIn={handleGoogleSignIn}
             onResetPassword={handleResetPassword}
             onCreateAccount={handleCreateAccount}
+            googleButton={
+                <GoogleLogin
+                    onSuccess={handleGoogleSuccess}
+                    onError={handleGoogleError}
+                    theme="filled_black"
+                    shape="pill"
+                    text="continue_with"
+                    width="320"
+                />
+            }
         />
     );
 };
