@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "build": "cd mern/reactImplementation && npm install && npm run build",
+    "start": "cd mern/reactImplementation && npm start"
+  },
+  "dependencies": {
+    "@radix-ui/react-slot": "^1.2.4"
+  }
+}
