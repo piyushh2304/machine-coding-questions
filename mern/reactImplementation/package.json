@@ -6,7 +6,7 @@
     "type": "module",
     "scripts": {
         "start": "node backend/server.js",
-        "build": "npm install && npm install --prefix frontend --include=dev && npm run build --prefix frontend && npm install --prefix backend",
+        "build": "npm install && npm install --prefix backend",
         "dev": "concurrently \"npm run server\" \"npm run client\"",
         "server": "cd backend && npm run dev",
         "client": "cd frontend && npm run dev"

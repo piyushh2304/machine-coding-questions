@@ -24,13 +24,7 @@ app.use('/api/tasks', taskRoutes);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, '../frontend/dist')));
-
-    app.get(/.*/, (req, res) => res.sendFile(path.resolve(__dirname, '../frontend', 'dist', 'index.html')));
-} else {
-    app.get('/', (req, res) => res.send('Server is ready'));
-}
+app.get('/', (req, res) => res.send('API is running...'));
 const port = process.env.PORT || 5000
 
 app.listen(port, () => {
