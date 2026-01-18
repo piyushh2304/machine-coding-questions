@@ -2,6 +2,8 @@ import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthPage } from '@/components/ui/sign-in';
 import { AuthContext } from '../context/auth-context';
+import { useToast } from '../context/toast-context';
+import { GoogleLogin } from '@react-oauth/google';
 import api from '../services/api';
 
 const sampleTestimonials = [
@@ -22,6 +24,7 @@ const sampleTestimonials = [
 const RegisterPage = () => {
     const { login } = useContext(AuthContext);
     const navigate = useNavigate();
+    const { toast } = useToast();
 
     const handleSignUp = async (event) => {
         event.preventDefault();
@@ -33,14 +36,44 @@ const RegisterPage = () => {
         try {
             const { data } = await api.post('/auth/register', { name, email, password });
             login(data);
+            toast({
+                title: "Account created!",
+                description: "Welcome to the platform.",
+            });
             navigate('/dashboard');
         } catch (error) {
-            alert(error.response?.data?.message || 'Registration failed');
+            toast({
+                title: "Registration failed",
+                description: error.response?.data?.message || 'Something went wrong',
+                variant: "destructive"
+            });
         }
     };
 
     const handleGoogleSignIn = () => {
-        alert("Google Sign In selected - Implementation pending");
+        toast({
+            title: "Coming Soon",
+            description: "Google Sign In is currently under development.",
+            variant: "default"
+        });
+    };
+
+    const handleGoogleSuccess = async (credentialResponse) => {
+        try {
+            const { credential } = credentialResponse;
+            // Send the token to backend
+            const { data } = await api.post('/auth/google', { token: credential });
+            login(data);
+            navigate('/dashboard');
+        } catch (error) {
+            console.error('Google Logic Failed', error);
+            alert('Google Login Failed');
+        }
+    };
+
+    const handleGoogleError = () => {
+        console.log('Login Failed');
+        alert('Google Login Failed');
     };
 
     const handleSignInClick = () => {
@@ -55,6 +88,16 @@ const RegisterPage = () => {
             onSubmit={handleSignUp}
             onGoogleSignIn={handleGoogleSignIn}
             onSignInClick={handleSignInClick}
+            googleButton={
+                <GoogleLogin
+                    onSuccess={handleGoogleSuccess}
+                    onError={handleGoogleError}
+                    theme="filled_black"
+                    shape="pill"
+                    text="signup_with"
+                    width="320"
+                />
+            }
         />
     );
 };

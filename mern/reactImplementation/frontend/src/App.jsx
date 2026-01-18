@@ -9,6 +9,8 @@ import { Toaster } from './components/ui/toaster';
 import ProfilePage from './pages/ProfilePage';
 
 
+import RegisterPage from './pages/RegisterPage';
+
 const App = () => {
   return (
     <AuthProvider>
@@ -17,7 +19,7 @@ const App = () => {
           <Suspense fallback={<div className="flex items-center justify-center h-screen">Loading...</div>}>
             <Routes>
               <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<div>Register Page (Similar to Login)</div>} />
+              <Route path="/register" element={<RegisterPage />} />
               <Route
                 path="/dashboard"
                 element={
