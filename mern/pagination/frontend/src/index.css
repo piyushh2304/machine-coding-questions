@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+/* Adding a nice subtle gray background to our whole document */
+body {
+  background-color: #f8fafc; 
+}

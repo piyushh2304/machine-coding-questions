@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Girlfriend's Day, Kiddo 💗</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Dancing+Script:wght@400;500;600;700&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  
+  <!-- Lenis Smooth Scroll CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="relative min-h-screen text-[#4a3b40] font-body selection:bg-pink-200 selection:text-pink-800">
+
+  <!-- Floating Audio Music Toggle (Fixed top-right) -->
+  <button id="music-toggle-btn" aria-label="Toggle music" class="glass fixed right-4 top-4 z-50 flex h-11 w-11 items-center justify-center rounded-full text-[#b76e79] shadow-lg transition-transform hover:scale-105 active:scale-95">
+    <svg id="float-vol-on" class="h-5 w-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+      <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+    </svg>
+    <svg id="float-vol-off" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+      <line x1="23" y1="9" x2="17" y2="15"></line>
+      <line x1="17" y1="9" x2="23" y2="15"></line>
+    </svg>
+  </button>
+
+  <!-- Background Animated Layer -->
+  <div class="fixed inset-0 -z-10 overflow-hidden bg-gradient-to-br from-[#FFF0F5] via-[#FCE4EC] to-[#EDE3F7]">
+    <!-- Ambient Glowing Orbs -->
+    <div class="animate-orb absolute -left-24 top-10 h-72 w-72 sm:h-96 sm:w-96 rounded-full bg-[#ff9ec2]/40 blur-3xl" style="--ox: 40px; --oy: 60px; --od: 18s;"></div>
+    <div class="animate-orb absolute right-[-6rem] top-1/3 h-80 w-80 sm:h-96 sm:w-96 rounded-full blur-3xl" style="background: rgba(179,157,219,0.42); --ox: -50px; --oy: -40px; --od: 22s;"></div>
+    <div class="animate-orb absolute bottom-[-5rem] left-1/3 h-72 w-72 sm:h-96 sm:w-96 rounded-full bg-[#ffc4d6]/45 blur-3xl" style="--ox: 30px; --oy: -60px; --od: 20s;"></div>
+    
+    <!-- Twinkling Stars Container -->
+    <div id="stars-container"></div>
+    
+    <!-- Falling Hearts Container -->
+    <div id="hearts-container"></div>
+  </div>
+
+
+  <!-- ============================================================
+       INTRO ENVELOPE SCREEN (Landing View)
+       ============================================================ -->
+  <div id="intro-screen" class="fixed inset-0 z-40 flex flex-col items-center justify-center px-4 py-8 text-center cursor-pointer transition-all duration-1000">
+    
+    <!-- Header Tag -->
+    <span class="font-editorial text-xs uppercase tracking-[0.25em] text-[#b76e79] mb-8 sm:mb-10">FOR THE GIRL I ADORE</span>
+    
+    <!-- Envelope Graphic Card -->
+    <div id="envelope-btn" class="envelope-wrapper group relative mb-8 sm:mb-10 cursor-pointer transition-transform duration-500 hover:scale-105 active:scale-95">
+      <div class="relative flex h-44 w-64 sm:h-52 sm:w-76 flex-col items-center justify-center rounded-2xl bg-gradient-to-b from-[#e892a5] to-[#c46d84] p-4 shadow-2xl shadow-pink-300/60 border border-white/40 overflow-hidden">
+        <!-- Top Flap -->
+        <div id="envelope-flap" class="envelope-flap absolute top-0 left-0 right-0 h-1/2 bg-[#ff7b9e] rounded-t-2xl shadow-md z-10 origin-top transition-transform duration-700"></div>
+        
+        <!-- Heart Circle Seal -->
+        <div class="animate-heartbeat relative z-20 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-white shadow-xl">
+          <svg class="h-6 w-6 sm:h-7 sm:w-7 text-[#ff4b72]" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 21s-6.7-4.35-9.33-8.09C.9 10.24 1.5 6.9 4.2 5.6c2-1 4.2-.3 5.3 1.3L12 9l2.5-2.1c1.1-1.6 3.3-2.3 5.3-1.3 2.7 1.3 3.3 4.64 1.53 7.31C18.7 16.65 12 21 12 21z"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Intro Titles -->
+    <h1 class="font-script text-4xl sm:text-6xl text-[#e05375] mb-2 drop-shadow-sm">a little world, made for you</h1>
+    <p class="font-editorial text-sm sm:text-base text-[#a07888] mb-8 sm:mb-10">happy girlfriend's day, my kiddo</p>
+
+    <!-- Tap Anywhere Pill Button -->
+    <button id="tap-to-begin-btn" class="rounded-full bg-white/90 border border-pink-200/80 px-8 py-3 text-xs uppercase tracking-[0.2em] text-[#b76e79] shadow-lg shadow-pink-200/50 transition-all hover:bg-white hover:scale-105 active:scale-95">
+      TAP ANYWHERE TO BEGIN ♡
+    </button>
+  </div>
+
+
+  <!-- ============================================================
+       MAIN WEBSITE CONTENT
+       ============================================================ -->
+  <main id="main-content" class="relative z-10 mx-auto max-w-5xl px-4 sm:px-6">
+
+    <!-- HERO SECTION -->
+    <section id="main-hero" class="flex min-h-screen flex-col items-center justify-center py-16 text-center">
+      
+      <!-- Top Heart Circle Badge -->
+      <div class="animate-heartbeat mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-white shadow-xl border border-pink-100">
+        <svg class="h-7 w-7 text-[#ff4b72]" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 21s-6.7-4.35-9.33-8.09C.9 10.24 1.5 6.9 4.2 5.6c2-1 4.2-.3 5.3 1.3L12 9l2.5-2.1c1.1-1.6 3.3-2.3 5.3-1.3 2.7 1.3 3.3 4.64 1.53 7.31C18.7 16.65 12 21 12 21z"/>
+        </svg>
+      </div>
+
+      <!-- Main Stacked Title -->
+      <h1 class="font-script text-romance text-6xl sm:text-8xl md:text-9xl font-bold leading-[1.1] tracking-wide drop-shadow-sm mb-6 flex flex-col items-center">
+        <span>Happy</span>
+        <span>Girlfriend's</span>
+        <span>Day</span>
+      </h1>
+
+      <!-- Subtitle Tag -->
+      <p class="mx-auto max-w-lg font-editorial italic text-xl sm:text-2xl text-[#8c737c] leading-relaxed mb-12">
+        for my favourite person, Kiddo — the prettiest angel heaven ever sent my way.
+      </p>
+
+      <!-- Scroll Indicator -->
+      <a href="#our-song-section" class="animate-floaty inline-flex flex-col items-center text-[#b76e79] opacity-80 hover:opacity-100 transition-opacity">
+        <span class="font-editorial text-xs uppercase tracking-[0.25em] mb-2">SCROLL FOR OUR LITTLE WORLD</span>
+        <svg class="h-5 w-5 text-[#ff4b72]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path>
+        </svg>
+      </a>
+    </section>
+
+
+    <!-- OUR SONG SECTION -->
+    <section id="our-song-section" class="px-2 sm:px-4 py-16 sm:py-20 text-center">
+      
+      <!-- Top Label -->
+      <span class="font-editorial text-xs sm:text-sm uppercase tracking-[0.25em] text-[#b76e79] mb-6 inline-block">
+        A TRACK THAT'S JUST... US
+      </span>
+
+      <!-- Music Pill Card -->
+      <div class="mx-auto max-w-lg rounded-[2.2rem] bg-white/95 p-4 sm:p-5 shadow-xl shadow-pink-200/60 border border-white/80 transition-all hover:shadow-2xl">
+        <div class="flex items-center gap-4 sm:gap-5">
+          
+          <!-- Round Pink Play Button -->
+          <button id="card-play-btn" aria-label="Play song" class="flex h-14 w-14 sm:h-16 sm:w-16 shrink-0 items-center justify-center rounded-full bg-[#d86a85] text-white shadow-md shadow-pink-400/30 transition-transform hover:scale-105 active:scale-95">
+            <svg id="play-icon" class="h-6 w-6 sm:h-7 sm:w-7 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+            <svg id="pause-icon" class="h-6 w-6 sm:h-7 sm:w-7 hidden" fill="currentColor" viewBox="0 0 24 24">
+              <rect x="6" y="4" width="4" height="16"></rect>
+              <rect x="14" y="4" width="4" height="16"></rect>
+            </svg>
+          </button>
+
+          <!-- Track Metadata + Progress Bar -->
+          <div class="flex-1 min-w-0 text-left">
+            <h3 class="font-body text-base sm:text-lg font-bold text-[#4a3b40] truncate">Perfect</h3>
+            <p class="font-body text-xs sm:text-sm text-[#8c737c] mb-2 truncate">Ed Sheeran — <span class="italic">our song</span></p>
+            
+            <!-- Progress Track Bar -->
+            <div id="progress-track" class="relative h-1.5 w-full cursor-pointer rounded-full bg-pink-100 overflow-hidden">
+              <div id="music-progress" class="h-full w-0 bg-[#d86a85] rounded-full transition-all duration-100"></div>
+            </div>
+          </div>
+
+          <!-- Solid Pink Heart Icon -->
+          <div class="animate-heartbeat shrink-0 pr-2 text-[#ff4b72]">
+            <svg class="h-6 w-6 sm:h-7 sm:w-7" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 21s-6.7-4.35-9.33-8.09C.9 10.24 1.5 6.9 4.2 5.6c2-1 4.2-.3 5.3 1.3L12 9l2.5-2.1c1.1-1.6 3.3-2.3 5.3-1.3 2.7 1.3 3.3 4.64 1.53 7.31C18.7 16.65 12 21 12 21z"/>
+            </svg>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Hidden Audio Element -->
+      <audio id="bg-music" src="./media/song.mp3" preload="metadata"></audio>
+    </section>
+
+
+    <!-- POLAROID AUTO-SLIDING INFINITE MARQUEE (EDGE-TO-EDGE UNCROPPED FULL PHOTOS) -->
+    <section class="py-16 sm:py-24 text-center">
+      <span class="font-editorial text-xs sm:text-sm uppercase tracking-[0.25em] text-[#b76e79] mb-2 inline-block">
+        US, IN A FEW FRAMES
+      </span>
+      <h2 class="font-script text-[#e05375] text-5xl sm:text-7xl mb-8">our little album</h2>
+
+      <!-- Infinite Auto-Sliding Marquee Wrapper -->
+      <div class="marquee-wrapper">
+        <div class="marquee-track gap-6 sm:gap-8">
+          
+          <!-- SET 1 (8 Photos) -->
+          <div class="polaroid-card group relative w-80 sm:w-96 md:w-[26rem] shrink-0 rounded-md bg-white p-4 pb-16 shadow-2xl" style="transform: rotate(-2deg);">
+            <div class="polaroid-photo-box h-[24rem] sm:h-[28rem] md:h-[32rem] w-full rounded-sm">
+              <img src="./media/photo4.jpg" alt="Moment 4" class="polaroid-img-stretch">
+            </div>
+            <p class="font-script absolute bottom-3 left-4 right-4 text-center text-xl sm:text-2xl text-[#6b525e]">the day I realised you were my favourite hello.</p>
+          </div>
+
+          <div class="polaroid-card group relative w-80 sm:w-96 md:w-[26rem] shrink-0 rounded-md bg-white p-4 pb-16 shadow-2xl" style="transform: rotate(3deg);">
+            <div class="polaroid-photo-box h-[24rem] sm:h-[28rem] md:h-[32rem] w-full rounded-sm">
+              <img src="./media/photo3.jpg" alt="Moment 3" class="polaroid-img-stretch">
+            </div>
+            <p class="font-script absolute bottom-3 left-4 right-4 text-center text-xl sm:text-2xl text-[#6b525e]">every quiet moment with you is my favourite kind.</p>
+          </div>
+
+          <div class="polaroid-card group relative w-80 sm:w-96 md:w-[26rem] shrink-0 rounded-md bg-white p-4 pb-16 shadow-2xl" style="transform: rotate(-3deg);">
+            <div class="polaroid-photo-box h-[24rem] sm:h-[28rem] md:h-[32rem] w-full rounded-sm">
+              <img src="./media/photo2.jpg" alt="Moment 2" class="polaroid-img-stretch">
+            </div>
+            <p class="font-script absolute bottom-3 left-4 right-4 text-center text-xl sm:text-2xl text-[#6b525e]">this frame — us, exactly like this.</p>
+          </div>
+
+          <div class="polaroid-card group relative w-80 sm:w-96 md:w-[26rem] shrink-0 rounded-md bg-white p-4 pb-16 shadow-2xl" style="transform: rotate(2deg);">
+            <div class="polaroid-photo-box h-[24rem] sm:h-[28rem] md:h-[32rem] w-full rounded-sm">
+              <img src="./media/photo1.jpg" alt="Moment 1" class="polaroid-img-stretch">
+            </div>
+            <p class="font-script absolute bottom-3 left-4 right-4 text-center text-xl sm:text-2xl text-[#6b525e]">I'd choose us, every single time.</p>
+          </div>
+
+          <div class="polaroid-card group relative w-80 sm:w-96 md:w-[26rem] shrink-0 rounded-md bg-white p-4 pb-16 shadow-2xl" style="transform: rotate(-2deg);">
+            <div class="polaroid-photo-box h-[24rem] sm:h-[28rem] md:h-[32rem] w-full rounded-sm">
+              <img src="./media/photo5.jpg" alt="Holding hands" class="polaroid-img-stretch">
+            </div>
+            <p class="font-script absolute bottom-3 left-4 right-4 text-center text-xl sm:text-2xl text-[#6b525e]">holding your hand is my favourite feeling.</p>
+          </div>
+
+          <div class="polaroid-card group relative w-80 sm:w-96 md:w-[26rem] shrink-0 rounded-md bg-white p-4 pb-16 shadow-2xl" style="transform: rotate(3deg);">
+            <div class="polaroid-photo-box h-[24rem] sm:h-[28rem] md:h-[32rem] w-full rounded-sm">
+              <img src="./media/photo6.jpg" alt="Sunset beach" class="polaroid-img-stretch">
+            </div>
+            <p class="font-script absolute bottom-3 left-4 right-4 text-center text-xl sm:text-2xl text-[#6b525e]">watching the sunset, with my forever.</p>
+          </div>
+
+          <div class="polaroid-card group relative w-80 sm:w-96 md:w-[26rem] shrink-0 rounded-md bg-white p-4 pb-16 shadow-2xl" style="transform: rotate(-3deg);">
+            <div class="polaroid-photo-box h-[24rem] sm:h-[28rem] md:h-[32rem] w-full rounded-sm">
+              <img src="./media/photo7.jpg" alt="Beach together" class="polaroid-img-stretch">
+            </div>
+            <p class="font-script absolute bottom-3 left-4 right-4 text-center text-xl sm:text-2xl text-[#6b525e]">every ocean view is prettier with you.</p>
+          </div>
+
+          <div class="polaroid-card group relative w-80 sm:w-96 md:w-[26rem] shrink-0 rounded-md bg-white p-4 pb-16 shadow-2xl" style="transform: rotate(2deg);">
+            <div class="polaroid-photo-box h-[24rem] sm:h-[28rem] md:h-[32rem] w-full rounded-sm">
+              <img src="./media/photo8.jpg" alt="Smiling together" class="polaroid-img-stretch">
+            </div>
+            <p class="font-script absolute bottom-3 left-4 right-4 text-center text-xl sm:text-2xl text-[#6b525e]">your smile makes my entire world bright.</p>
+          </div>
+
+          <!-- SET 2 DUPLICATED FOR SEAMLESS INFINITE LOOP -->
+          <div class="polaroid-card group relative w-80 sm:w-96 md:w-[26rem] shrink-0 rounded-md bg-white p-4 pb-16 shadow-2xl" style="transform: rotate(-2deg);">
+            <div class="polaroid-photo-box h-[24rem] sm:h-[28rem] md:h-[32rem] w-full rounded-sm">
+              <img src="./media/photo4.jpg" alt="Moment 4" class="polaroid-img-stretch">
+            </div>
+            <p class="font-script absolute bottom-3 left-4 right-4 text-center text-xl sm:text-2xl text-[#6b525e]">the day I realised you were my favourite hello.</p>
+          </div>
+
+          <div class="polaroid-card group relative w-80 sm:w-96 md:w-[26rem] shrink-0 rounded-md bg-white p-4 pb-16 shadow-2xl" style="transform: rotate(3deg);">
+            <div class="polaroid-photo-box h-[24rem] sm:h-[28rem] md:h-[32rem] w-full rounded-sm">
+              <img src="./media/photo3.jpg" alt="Moment 3" class="polaroid-img-stretch">
+            </div>
+            <p class="font-script absolute bottom-3 left-4 right-4 text-center text-xl sm:text-2xl text-[#6b525e]">every quiet moment with you is my favourite kind.</p>
+          </div>
+
+          <div class="polaroid-card group relative w-80 sm:w-96 md:w-[26rem] shrink-0 rounded-md bg-white p-4 pb-16 shadow-2xl" style="transform: rotate(-3deg);">
+            <div class="polaroid-photo-box h-[24rem] sm:h-[28rem] md:h-[32rem] w-full rounded-sm">
+              <img src="./media/photo2.jpg" alt="Moment 2" class="polaroid-img-stretch">
+            </div>
+            <p class="font-script absolute bottom-3 left-4 right-4 text-center text-xl sm:text-2xl text-[#6b525e]">this frame — us, exactly like this.</p>
+          </div>
+
+          <div class="polaroid-card group relative w-80 sm:w-96 md:w-[26rem] shrink-0 rounded-md bg-white p-4 pb-16 shadow-2xl" style="transform: rotate(2deg);">
+            <div class="polaroid-photo-box h-[24rem] sm:h-[28rem] md:h-[32rem] w-full rounded-sm">
+              <img src="./media/photo1.jpg" alt="Moment 1" class="polaroid-img-stretch">
+            </div>
+            <p class="font-script absolute bottom-3 left-4 right-4 text-center text-xl sm:text-2xl text-[#6b525e]">I'd choose us, every single time.</p>
+          </div>
+
+          <div class="polaroid-card group relative w-80 sm:w-96 md:w-[26rem] shrink-0 rounded-md bg-white p-4 pb-16 shadow-2xl" style="transform: rotate(-2deg);">
+            <div class="polaroid-photo-box h-[24rem] sm:h-[28rem] md:h-[32rem] w-full rounded-sm">
+              <img src="./media/photo5.jpg" alt="Holding hands" class="polaroid-img-stretch">
+            </div>
+            <p class="font-script absolute bottom-3 left-4 right-4 text-center text-xl sm:text-2xl text-[#6b525e]">holding your hand is my favourite feeling.</p>
+          </div>
+
+          <div class="polaroid-card group relative w-80 sm:w-96 md:w-[26rem] shrink-0 rounded-md bg-white p-4 pb-16 shadow-2xl" style="transform: rotate(3deg);">
+            <div class="polaroid-photo-box h-[24rem] sm:h-[28rem] md:h-[32rem] w-full rounded-sm">
+              <img src="./media/photo6.jpg" alt="Sunset beach" class="polaroid-img-stretch">
+            </div>
+            <p class="font-script absolute bottom-3 left-4 right-4 text-center text-xl sm:text-2xl text-[#6b525e]">watching the sunset, with my forever.</p>
+          </div>
+
+          <div class="polaroid-card group relative w-80 sm:w-96 md:w-[26rem] shrink-0 rounded-md bg-white p-4 pb-16 shadow-2xl" style="transform: rotate(-3deg);">
+            <div class="polaroid-photo-box h-[24rem] sm:h-[28rem] md:h-[32rem] w-full rounded-sm">
+              <img src="./media/photo7.jpg" alt="Beach together" class="polaroid-img-stretch">
+            </div>
+            <p class="font-script absolute bottom-3 left-4 right-4 text-center text-xl sm:text-2xl text-[#6b525e]">every ocean view is prettier with you.</p>
+          </div>
+
+          <div class="polaroid-card group relative w-80 sm:w-96 md:w-[26rem] shrink-0 rounded-md bg-white p-4 pb-16 shadow-2xl" style="transform: rotate(2deg);">
+            <div class="polaroid-photo-box h-[24rem] sm:h-[28rem] md:h-[32rem] w-full rounded-sm">
+              <img src="./media/photo8.jpg" alt="Smiling together" class="polaroid-img-stretch">
+            </div>
+            <p class="font-script absolute bottom-3 left-4 right-4 text-center text-xl sm:text-2xl text-[#6b525e]">your smile makes my entire world bright.</p>
+          </div>
+
+        </div>
+      </div>
+
+      <p class="font-editorial italic text-sm text-[#8c737c] mt-2">← hover or touch to pause & view our memories →</p>
+    </section>
+
+
+    <!-- REASONS SECTION -->
+    <section class="px-2 sm:px-4 py-16 sm:py-20 text-center">
+      <span class="font-editorial text-xs sm:text-sm uppercase tracking-[0.25em] text-[#b76e79] mb-2 inline-block">
+        PICKED JUST FOR YOU ♡
+      </span>
+      <h2 class="font-script text-[#e05375] text-5xl sm:text-7xl mb-10">a bloom for every reason I adore you</h2>
+
+      <div class="mx-auto grid max-w-3xl grid-cols-1 gap-4 sm:grid-cols-2">
+        
+        <!-- Reason 1 -->
+        <div class="glass-card flex items-center gap-4 rounded-3xl p-4 sm:p-5 shadow-lg border border-pink-100/80 transition-transform hover:-translate-y-1">
+          <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#ff4b72] text-white shadow-md shadow-pink-300/40">
+            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 21s-6.7-4.35-9.33-8.09C.9 10.24 1.5 6.9 4.2 5.6c2-1 4.2-.3 5.3 1.3L12 9l2.5-2.1c1.1-1.6 3.3-2.3 5.3-1.3 2.7 1.3 3.3 4.64 1.53 7.31C18.7 16.65 12 21 12 21z"/>
+            </svg>
+          </div>
+          <span class="font-body text-base sm:text-lg text-[#4a3b40] font-medium text-left">you feel like home</span>
+        </div>
+
+        <!-- Reason 2 -->
+        <div class="glass-card flex items-center gap-4 rounded-3xl p-4 sm:p-5 shadow-lg border border-pink-100/80 transition-transform hover:-translate-y-1">
+          <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#ff4b72] text-white shadow-md shadow-pink-300/40">
+            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 21s-6.7-4.35-9.33-8.09C.9 10.24 1.5 6.9 4.2 5.6c2-1 4.2-.3 5.3 1.3L12 9l2.5-2.1c1.1-1.6 3.3-2.3 5.3-1.3 2.7 1.3 3.3 4.64 1.53 7.31C18.7 16.65 12 21 12 21z"/>
+            </svg>
+          </div>
+          <span class="font-body text-base sm:text-lg text-[#4a3b40] font-medium text-left">your smile is my favourite sound</span>
+        </div>
+
+        <!-- Reason 3 -->
+        <div class="glass-card flex items-center gap-4 rounded-3xl p-4 sm:p-5 shadow-lg border border-pink-100/80 transition-transform hover:-translate-y-1">
+          <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#ff4b72] text-white shadow-md shadow-pink-300/40">
+            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 21s-6.7-4.35-9.33-8.09C.9 10.24 1.5 6.9 4.2 5.6c2-1 4.2-.3 5.3 1.3L12 9l2.5-2.1c1.1-1.6 3.3-2.3 5.3-1.3 2.7 1.3 3.3 4.64 1.53 7.31C18.7 16.65 12 21 12 21z"/>
+            </svg>
+          </div>
+          <span class="font-body text-base sm:text-lg text-[#4a3b40] font-medium text-left">you make ordinary days magic</span>
+        </div>
+
+        <!-- Reason 4 -->
+        <div class="glass-card flex items-center gap-4 rounded-3xl p-4 sm:p-5 shadow-lg border border-pink-100/80 transition-transform hover:-translate-y-1">
+          <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#ff4b72] text-white shadow-md shadow-pink-300/40">
+            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 21s-6.7-4.35-9.33-8.09C.9 10.24 1.5 6.9 4.2 5.6c2-1 4.2-.3 5.3 1.3L12 9l2.5-2.1c1.1-1.6 3.3-2.3 5.3-1.3 2.7 1.3 3.3 4.64 1.53 7.31C18.7 16.65 12 21 12 21z"/>
+            </svg>
+          </div>
+          <span class="font-body text-base sm:text-lg text-[#4a3b40] font-medium text-left">you're my calm and my spark</span>
+        </div>
+
+        <!-- Reason 5 -->
+        <div class="glass-card flex items-center gap-4 rounded-3xl p-4 sm:p-5 shadow-lg border border-pink-100/80 transition-transform hover:-translate-y-1">
+          <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#ff4b72] text-white shadow-md shadow-pink-300/40">
+            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 21s-6.7-4.35-9.33-8.09C.9 10.24 1.5 6.9 4.2 5.6c2-1 4.2-.3 5.3 1.3L12 9l2.5-2.1c1.1-1.6 3.3-2.3 5.3-1.3 2.7 1.3 3.3 4.64 1.53 7.31C18.7 16.65 12 21 12 21z"/>
+            </svg>
+          </div>
+          <span class="font-body text-base sm:text-lg text-[#4a3b40] font-medium text-left">you make me want to be better</span>
+        </div>
+
+        <!-- Reason 6 -->
+        <div class="glass-card flex items-center gap-4 rounded-3xl p-4 sm:p-5 shadow-lg border border-pink-100/80 transition-transform hover:-translate-y-1">
+          <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#ff4b72] text-white shadow-md shadow-pink-300/40">
+            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 21s-6.7-4.35-9.33-8.09C.9 10.24 1.5 6.9 4.2 5.6c2-1 4.2-.3 5.3 1.3L12 9l2.5-2.1c1.1-1.6 3.3-2.3 5.3-1.3 2.7 1.3 3.3 4.64 1.53 7.31C18.7 16.65 12 21 12 21z"/>
+            </svg>
+          </div>
+          <span class="font-body text-base sm:text-lg text-[#4a3b40] font-medium text-left">it's you. it's always you.</span>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- DAYS TOGETHER COUNTER SECTION -->
+    <section class="px-2 sm:px-4 py-16 sm:py-20 text-center">
+      <span class="font-editorial text-xs sm:text-sm uppercase tracking-[0.25em] text-[#b76e79] mb-2 inline-block">
+        COUNTING DAYS WITH YOU
+      </span>
+      <h2 class="font-script text-[#e05375] text-5xl sm:text-7xl mb-8">days we’ve been together</h2>
+
+      <div class="mx-auto grid max-w-lg grid-cols-4 gap-2.5 sm:gap-4">
+        <div class="glass-card rounded-2xl px-1 sm:px-2 py-5 text-center shadow-lg">
+          <div id="count-days" class="font-script text-3xl sm:text-5xl font-bold text-[#ff4b72]">0</div>
+          <div class="font-editorial italic text-xs sm:text-sm text-[#8c737c] mt-1">days</div>
+        </div>
+        <div class="glass-card rounded-2xl px-1 sm:px-2 py-5 text-center shadow-lg">
+          <div id="count-hours" class="font-script text-3xl sm:text-5xl font-bold text-[#ff4b72]">0</div>
+          <div class="font-editorial italic text-xs sm:text-sm text-[#8c737c] mt-1">hours</div>
+        </div>
+        <div class="glass-card rounded-2xl px-1 sm:px-2 py-5 text-center shadow-lg">
+          <div id="count-mins" class="font-script text-3xl sm:text-5xl font-bold text-[#ff4b72]">0</div>
+          <div class="font-editorial italic text-xs sm:text-sm text-[#8c737c] mt-1">minutes</div>
+        </div>
+        <div class="glass-card rounded-2xl px-1 sm:px-2 py-5 text-center shadow-lg">
+          <div id="count-secs" class="font-script text-3xl sm:text-5xl font-bold text-[#ff4b72]">0</div>
+          <div class="font-editorial italic text-xs sm:text-sm text-[#8c737c] mt-1">seconds</div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- INTERACTIVE "DO YOU LOVE ME?" QUESTION SECTION -->
+    <section class="px-2 sm:px-4 py-16 sm:py-20">
+      <div class="mx-auto max-w-md text-center">
+        <div class="glass rounded-3xl p-6 sm:p-8 shadow-xl shadow-pink-200/50">
+          <h2 class="font-script text-[#e05375] text-4xl sm:text-6xl mb-6">do you love me?</h2>
+          
+          <div id="question-actions" class="relative mt-8 flex min-h-[100px] items-center justify-center gap-4 sm:gap-6 flex-wrap">
+            <button id="yes-btn" class="rounded-full bg-gradient-to-r from-[#ff6b9d] to-[#ff4b72] px-8 py-3.5 font-semibold text-white shadow-lg shadow-pink-400/40 transition-all duration-200 hover:scale-105 active:scale-95">
+              Yes! 💖
+            </button>
+            <button id="no-btn" class="rounded-full bg-white/90 border border-pink-200 px-7 py-3.5 font-medium text-[#8c737c] shadow-sm transition-all duration-200">
+              No 🙈
+            </button>
+          </div>
+
+          <div id="answer-result" class="hidden mt-6 animate-heartbeat font-script text-3xl sm:text-4xl text-[#ff4b72]">
+            i knew it! love you more kiddo 💗
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- HEART BURST SURPRISE SECTION (EXACT MATCH TO SCREENSHOT 4) -->
+    <section class="px-2 sm:px-4 py-16 sm:py-20">
+      <div class="mx-auto max-w-lg text-center relative">
+        
+        <!-- Surprise Button -->
+        <button id="surprise-btn" class="group relative rounded-full bg-gradient-to-r from-[#ff6b9d] via-[#ff4b72] to-[#e79fc4] px-10 py-4 font-semibold text-white shadow-xl shadow-pink-400/40 transition-all duration-300 hover:scale-105 active:scale-95">
+          <span class="flex items-center gap-2 text-lg sm:text-xl">
+            <span>tap for a surprise</span>
+            <span class="animate-heartbeat">💗</span>
+          </span>
+        </button>
+
+        <!-- Revealed Card & Background Hearts Fountain -->
+        <div id="surprise-card-wrapper" class="relative hidden">
+          <!-- Background container for rising heart particles -->
+          <div id="surprise-hearts-bg" class="absolute inset-0 -z-10 overflow-visible pointer-events-none"></div>
+
+          <!-- Glass Pill Card (Screenshot 4) -->
+          <div id="surprise-result" class="glass-card rounded-[2.2rem] p-8 sm:p-12 shadow-2xl shadow-pink-300/60 border border-white/90 transition-all duration-700 transform scale-95 opacity-0">
+            <p class="font-script text-3xl sm:text-4xl md:text-5xl text-[#e05375] leading-relaxed text-center drop-shadow-sm">
+              you're reading this because I ran out of ways to say it out loud — so here it is, forever: I love you, my kiddo. <span class="inline-block animate-heartbeat">💗</span>
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- TYPEWRITER LOVE LETTER SECTION -->
+    <section id="letter-section" class="px-2 sm:px-4 py-16 sm:py-20">
+      <div class="mx-auto max-w-xl">
+        <div class="glass rounded-3xl p-6 sm:p-10 shadow-2xl border border-white/90">
+          
+          <div class="mb-6 text-center">
+            <div class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-pink-100 text-[#ff4b72]">
+              <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+              </svg>
+            </div>
+            <h2 class="font-script text-[#e05375] text-4xl sm:text-6xl">a letter for kiddo</h2>
+          </div>
+
+          <div class="relative min-h-[220px] rounded-2xl bg-white/70 p-5 sm:p-8 shadow-inner border border-pink-100">
+            <p id="letter-content" class="font-editorial italic text-xl sm:text-2xl leading-relaxed text-[#4a3b40] whitespace-pre-wrap"></p>
+            <span class="blink-caret inline-block h-6 w-0.5 bg-[#ff4b72] align-middle ml-1"></span>
+          </div>
+
+          <div class="mt-4 text-right">
+            <button id="skip-typewriter" class="text-xs text-[#8c737c] underline hover:text-[#ff4b72] transition-colors">
+              Skip to end
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- CLOSING SECTION -->
+    <section id="closing-section" class="flex min-h-screen flex-col items-center justify-center px-4 py-20 text-center">
+      
+      <div class="animate-heartbeat mb-8 text-[#ff4b72]">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="#ff4b72">
+          <path d="M12 21s-6.7-4.35-9.33-8.09C.9 10.24 1.5 6.9 4.2 5.6c2-1 4.2-.3 5.3 1.3L12 9l2.5-2.1c1.1-1.6 3.3-2.3 5.3-1.3 2.7 1.3 3.3 4.64 1.53 7.31C18.7 16.65 12 21 12 21z"/>
+        </svg>
+      </div>
+
+      <h2 class="font-script text-[#e05375] text-5xl sm:text-7xl font-bold mb-4">
+        forever & always
+      </h2>
+
+      <p class="font-script text-3xl sm:text-4xl text-[#8c737c] mb-12">
+        Piyuu 💗
+      </p>
+
+      <button id="one-more-heart" class="rounded-full bg-white/80 border border-pink-200 px-8 py-3.5 font-medium text-[#b76e79] shadow-lg transition-transform hover:scale-105 active:scale-95">
+        send one more heart 💗
+      </button>
+
+    </section>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
